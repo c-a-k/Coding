@@ -1,0 +1,69 @@
+Linked
+======
+
+10
+[1491180256139 linked] put loop count: 45
+[1491180256139 linked] get loop count: 100
+
+100
+[1491180277079 linked] put loop count: 4950
+[1491180277079 linked] get loop count: 10000
+
+1,000
+[1491180286187 linked] put loop count: 499500
+[1491180286187 linked] get loop count: 1000000
+
+10,000
+[1491180298337 linked] put loop count: 49995000
+[1491180298337 linked] get loop count: 100000000
+
+100,000
+[1491180316343 linked] put loop count: 704901963
+[1491180316343 linked] get loop count: 1409774512
+
+300,000
+[1491180437309 linked] put loop count: 2048153808
+[1491180437309 linked] get loop count: -200039551*
+*this negative number is most likely due to findLoops field being an integer and exceeding the 32-bit limit
+>>>>>>>>>>>>>ACTUAL NUMERICAL VALUE IS 4094927743<<<<<<<<<<<<<<<<<
+
+Binary Search Tree
+==================
+
+10
+[1491180482643 bst   ] put loop count: 27
+[1491180482643 bst   ] get loop count: 36
+
+100
+[1491180493414 bst   ] put loop count: 620
+[1491180493414 bst   ] get loop count: 631
+
+1,000
+[1491180497442 bst   ] put loop count: 10453
+[1491180497442 bst   ] get loop count: 9471
+
+10,000
+[1491180508173 bst   ] put loop count: 147866
+[1491180508173 bst   ] get loop count: 126451
+
+100,000
+[1491180513396 bst   ] put loop count: 2059647
+[1491180513396 bst   ] get loop count: 1732098
+
+300,000
+[1491180705540 bst   ] put loop count: 7162773
+[1491180705540 bst   ] get loop count: 5877141
+
+1,000,0000
+[1491180531674 bst   ] put loop count: 25536396
+[1491180531674 bst   ] get loop count: 21467698
+
+Questions
+=========
+
+1) Approximately how long did it take your computer to run the test for 300,000 iterations on the linked implementation?
+It took approximately 20 minutes for my computer to run the test
+2) What is the maximum value you can run the binary search tree implementation for and have it finish in less than a few seconds?
+At around 1200000 iterations, the runtime is about 5 seconds, so the maximum value is somewhere between 1000000 and 1200000 iterations for it to be under a few seconds (which I assume to be 5 seconds)
+ 
+ 
