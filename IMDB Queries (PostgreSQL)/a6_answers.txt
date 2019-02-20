@@ -1,0 +1,110 @@
+PART ONE
+
+CREATE FUNCTION cknowles_function (name varchar)
+RETURNS TABLE(id varchar, year integer, rank double precision, votes integer) AS $$
+    SELECT productions.id, year, rank, votes
+    FROM productions NATURAL JOIN directors NATURAL LEFT JOIN ratings
+    WHERE attr is NULL AND pid = name
+    ORDER BY year;
+$$ LANGUAGE SQL;
+
+SELECT * FROM cknowles_function('Nolan, Christopher (I)');
+
+              id               | year | rank |  votes  
+-------------------------------+------+------+---------
+ Doodlebug (1997)              | 1997 |  7.1 |   11415
+ Following (1998)              | 1998 |  7.6 |   66121
+ Memento (2000)                | 2000 |  8.5 |  849849
+ Insomnia (2002)               | 2002 |  7.2 |  219782
+ Batman Begins (2005)          | 2005 |  8.3 |  986936
+ The Prestige (2006)           | 2006 |  8.5 |  849119
+ The Exec (2006) {{SUSPENDED}} | 2006 |      |        
+ The Dark Knight (2008)        | 2008 |    9 | 1685825
+ Inception (2010)              | 2010 |  8.8 | 1476746
+ The Dark Knight Rises (2012)  | 2012 |  8.5 | 1151061
+ Interstellar (2014)           | 2014 |  8.6 |  937348
+ Quay (2015)                   | 2015 |    8 |     357
+ Dunkirk (2017)                | 2017 |      |        
+(13 rows)
+
+SELECT * FROM cknowles_function('Tarantino, Quentin');
+
+                id                 | year | rank |  votes  
+-----------------------------------+------+------+---------
+ Love Birds in Bondage (1983)      | 1983 |      |        
+ My Best Friend's Birthday (1987)  | 1987 |  5.8 |    2955
+ Reservoir Dogs (1992)             | 1992 |  8.4 |  668327
+ Pulp Fiction (1994)               | 1994 |  8.9 | 1331471
+ Four Rooms (1995)                 | 1995 |  6.7 |   78516
+ Jackie Brown (1997)               | 1997 |  7.5 |  240595
+ Kill Bill: Vol. 1 (2003)          | 2003 |  8.1 |  739604
+ Kill Bill: Vol. 2 (2004)          | 2004 |    8 |  515130
+ Sin City (2005)                   | 2005 |  8.1 |  659002
+ Grindhouse (2007)                 | 2007 |  7.6 |  155890
+ Death Proof (2007)                | 2007 |  7.1 |  210187
+ Inglourious Basterds (2009)       | 2009 |  8.3 |  890756
+ Django Unchained (2012)           | 2012 |  8.5 |  961479
+ The Hateful Eight (2015)          | 2015 |  7.9 |  279497
+ Faster, Pussycat Kill Kill (????) |      |      |        
+(15 rows)
+
+
+
+
+
+PART TWO
+
+CREATE TABLE Parts(
+    pid integer,
+    pname varchar(40),
+    color varchar(20)
+);
+
+INSERT INTO Parts SELECT 0, 'Engine', 'Black';
+INSERT INTO Parts SELECT 1, 'Spoiler', 'Blue';
+INSERT INTO Parts SELECT 2, 'Door', 'Red';
+INSERT INTO Parts SELECT 3, 'Seat', 'White';
+
+CREATE TABLE partshistory(
+    pid integer,
+    pname varchar(40),
+    color varchar(20),
+    operation char,
+    opwhen timestamp,
+    opuser char(20)
+);
+
+CREATE OR REPLACE FUNCTION parts_process() RETURNS TRIGGER AS $partshistory$
+    BEGIN
+        IF (TG_OP = 'DELETE') THEN
+            INSERT INTO partshistory SELECT OLD.*, 'D', now(), user;
+            RETURN OLD;
+        ELSIF (TG_OP = 'UPDATE') THEN
+            INSERT INTO partshistory SELECT NEW.*, 'U', now(), user;
+            RETURN NEW;
+        ELSIF (TG_OP = 'INSERT') THEN
+            INSERT INTO partshistory SELECT NEW.*, 'I', now(), user;
+            RETURN NEW;
+        END IF;
+        RETURN NULL;
+    END;
+$partshistory$ LANGUAGE plpgsql;
+
+CREATE TRIGGER partshistory
+AFTER INSERT OR UPDATE OR DELETE ON Parts
+    FOR EACH ROW EXECUTE PROCEDURE parts_process();
+
+TESTING TRIGGER WITH OPERATIONS
+
+INSERT INTO Parts SELECT 4, 'Hood', 'Green';
+INSERT INTO Parts SELECT 5, 'Trunk', 'Yellow';
+DELETE FROM parts WHERE pid=5;
+UPDATE parts SET color='Black' WHERE color='Blue';
+SELECT * FROM PARTShistory;
+ pid |  pname  | color  | operation |           opwhen           |        opuser        
+-----+---------+--------+-----------+----------------------------+----------------------
+   4 | Hood    | Green  | I         | 2018-11-14 22:33:23.826208 | cknowles            
+   5 | Trunk   | Yellow | I         | 2018-11-14 22:34:09.133819 | cknowles            
+   5 | Trunk   | Yellow | D         | 2018-11-14 22:34:58.14576  | cknowles            
+   1 | Spoiler | Black  | U         | 2018-11-14 22:36:20.603731 | cknowles            
+(4 rows)

@@ -1,0 +1,14 @@
+1)
+SELECT id,year FROM productions WHERE title ~ 'Harry Potter' and year>2011 and attr is null;
+
+2)
+SELECT id,character FROM roles WHERE pid='Streep, Meryl' and id IN (SELECT id FROM productions WHERE attr is null and year<1980);
+
+3)
+SELECT id,character,billing FROM roles WHERE pid='Eastwood, Clint' and id IN (SELECT id FROM directors WHERE pid='Leone, Sergio (I)');
+
+4)
+SELECT id FROM roles WHERE pid='Nimoy, Leonard' INTERSECT SELECT id FROM roles WHERE pid='Hawking, Stephen';
+
+5)
+SELECT id, pid, character FROM roles WHERE (id='The Matrix Reloaded (2003)' or id='The Matrix (1999)') and pid IN (SELECT pid FROM roles WHERE id='The Matrix Reloaded (2003)' INTERSECT SELECT pid FROM roles WHERE id='The Matrix (1999)');
