@@ -1,21 +1,20 @@
 Christian Knowles
-V00874629
 
-All programs have been tested using ssh and should be functional
+Producer-Consumer (bounded buffer) using semphores, mutex/condition variables, and spinlock
+Smoker's problem
+Both pthreads and user level threads are used
 
-Discussed project with the following CSC360 students (we're in a Facebook group chat):
-
-Trevor Rutherford
-Mark Guebert
-Cole Lance Lansing
-Scott Andreen
-Craig Mathieson
-Corbin Graham
-Andrew Craylic
+pc_spinlock_uthread.c
+pc_mutex_cond_pthread.c
+pc_mutex_cond_uthread.c
+pc_sem_uthread.c
+pc_sem_pthread.c
+smoke_pthread.c
+smoke_uthread.c
 
                              ___-------___
                          _-~~             ~~-_
-                      _-~       CSC 360      /~-_
+                      _-~                    /~-_
    /^\__/^\         /~  \                   /    \
  /|  O|| O|        /      \_______________/        \
 | |___||__|      /       /                \          \
